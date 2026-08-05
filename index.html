@@ -39,16 +39,30 @@
 <body>
   <div id="loader">Caricamento...</div>
   <!--
-    Sostituisci l'URL qui sotto con il TUO link ufficiale /exec
-    (quello che trovi in Link_definitivo_app.md), se dovesse mai cambiare
-    a seguito di una NUOVA distribuzione (non serve cambiarlo per una
-    semplice "Nuova versione" della stessa distribuzione).
+    Sostituisci l'URL nella costante BASE_URL qui sotto con il TUO link
+    ufficiale /exec (quello che trovi in Link_definitivo_app.md), se
+    dovesse mai cambiare a seguito di una NUOVA distribuzione (non serve
+    cambiarlo per una semplice "Nuova versione" della stessa distribuzione).
+    Il src dell'iframe NON è più scritto qui in modo statico: viene
+    impostato dallo script qui sotto, che ritrasmette all'app anche un
+    eventuale parametro ?u=CODICE (QR personale di un utente).
   -->
   <iframe
-    src="https://script.google.com/macros/s/AKfycbzx9dE-lls0NsixSaWiYXAdmCpCr_ZDisCny5MJpKnAFrtXP4RaS_twRv4g7ceu0xo_/exec"
+    id="appFrame"
     title="Prenotazione Testimonianza Pubblica"
     allow="clipboard-write"
     onload="document.getElementById('loader').style.display='none'">
   </iframe>
+  <script>
+    (function () {
+      var BASE_URL = 'https://script.google.com/macros/s/AKfycbzx9dE-lls0NsixSaWiYXAdmCpCr_ZDisCny5MJpKnAFrtXP4RaS_twRv4g7ceu0xo_/exec';
+      // Se questa pagina è stata aperta con ?u=CODICE (link nel QR personale
+      // stampato su una scheda utente), lo ritrasmettiamo all'app dentro
+      // l'iframe: l'utente trova il proprio codice già inserito e l'accesso
+      // avviato automaticamente, senza doverlo ridigitare a mano.
+      var codice = new URLSearchParams(window.location.search).get('u');
+      document.getElementById('appFrame').src = codice ? (BASE_URL + '?u=' + encodeURIComponent(codice)) : BASE_URL;
+    })();
+  </script>
 </body>
 </html>
